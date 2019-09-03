@@ -4,9 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.0" />
-    <PackageReference Include="Xamarin.Forms" Version="4.0.0.425677" />
-  </ItemGroup>
+
 
 </Project>

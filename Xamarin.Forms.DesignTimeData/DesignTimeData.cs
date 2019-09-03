@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Xamarin.Forms
+﻿namespace Xamarin.Forms
 {
     public class DesignTimeData
     {
