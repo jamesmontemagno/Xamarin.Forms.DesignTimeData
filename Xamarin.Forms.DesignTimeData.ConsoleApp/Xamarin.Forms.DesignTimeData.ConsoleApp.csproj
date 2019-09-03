@@ -10,4 +10,8 @@
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.425677" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Xamarin.Forms.DesignTimeData\Xamarin.Forms.DesignTimeData.csproj" />
+  </ItemGroup>
+
 </Project>
