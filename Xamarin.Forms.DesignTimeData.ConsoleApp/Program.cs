@@ -9,13 +9,14 @@ namespace Xamarin.Forms.DesignTimeData.ConsoleApp
     {
         static void Main(string[] args)
         {
-            using (var xf = ModuleDefinition.ReadModule("Xamarin.Forms.dll"))
+            using (var xfd = ModuleDefinition.ReadModule("Xamarin.Forms.DesignTimeData.dll"))
             {
-                using (var xfd = ModuleDefinition.ReadModule("Xamarin.Forms.DesignTimeData.dll"))
-                {
-                    var dtd = xfd.GetType("Xamarin.Forms.DesignTimeData");
-                    var is_enabled_def = dtd.Methods.First(m => m.Name == "get_IsEnabled");
+                var dtd = xfd.GetType("Xamarin.Forms.DesignTimeData");
+                var is_enabled_def = dtd.Methods.First(m => m.Name == "get_IsEnabled");
 
+
+                using (var xf = ModuleDefinition.ReadModule("Xamarin.Forms.dll"))
+                {
                     var is_enabled = xf.ImportReference(is_enabled_def);
                     var dm = xf.GetType("Xamarin.Forms.DesignMode");
 
