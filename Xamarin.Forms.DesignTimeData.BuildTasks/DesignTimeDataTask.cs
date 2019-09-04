@@ -13,18 +13,23 @@ namespace Refractored.DesignTimeData.BuildTasks
     {
         public override bool Execute()
         {
+            Log.LogMessage("-------------RUNNING-------------");
             try
             {
                 GetReferences();
+                //Log.LogMessage("-------------Get References Run-------------");
                 GetAssembliesToInstrument();
+                //Log.LogMessage("-------------Get Assemblies To Instrument-------------");
                 Instrument();
+                //Log.LogMessage("-------------Instrument Run-------------");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                //Log.LogMessage("-------------Exception-------------");
                 Log.LogErrorFromException(ex);
                 return false;
             }
+            Log.LogMessage("-------------Finished-------------");
 
             return true;
         }
@@ -47,6 +52,7 @@ namespace Refractored.DesignTimeData.BuildTasks
             var references = ReferencePath.Split(';').Select(x => x.Trim()).Where(x => x.Length > 0).ToList();
             foreach (var r in references)
             {
+                //Log.LogMessage(r);
                 refpaths.Add(r);
             }
         }
@@ -58,17 +64,21 @@ namespace Refractored.DesignTimeData.BuildTasks
             bool ShouldInstrument(string path)
             {                
                 var name = Path.GetFileNameWithoutExtension(path);
-                return name == "Xamarin.Forms";
+
+                //Log.LogMessage("GATI " + name);
+                return name == "Xamarin.Forms.Core";
             }
 
             toinstrument = new List<string>(refpaths.Where(ShouldInstrument));
         }
 
         LinkerAssemblyResolver asmResolver;
-        AssemblyDefinition niasm;
 
         void Instrument()
         {
+            if (asmResolver == null)
+                asmResolver = new LinkerAssemblyResolver(this);
+
             var asmParameters = new ReaderParameters
             {
                 AssemblyResolver = asmResolver,
@@ -76,26 +86,27 @@ namespace Refractored.DesignTimeData.BuildTasks
                 ReadWrite = true,
             };
             var asms = toinstrument.Select(path => {
+                //Log.LogMessage("select: " + path);
                 var guessName = new AssemblyNameReference(Path.GetFileNameWithoutExtension(path), new Version(0, 0));
+                //Log.LogMessage("Got Guess Name");
                 asmParameters.ReadSymbols = File.Exists(Path.ChangeExtension(path, ".pdb"));
+                //Log.LogMessage("Checked symbols");
                 var asm = asmResolver.Resolve(guessName, asmParameters);
+                //Log.LogMessage("Resolved it");
                 return (asm, path);
             }).ToList();
+
+            //Log.LogMessage("Selected asms");
             System.Threading.Tasks.Parallel.ForEach(asms, x => InstrumentAssembly(x.asm, x.path));
         }
 
         void InstrumentAssembly(AssemblyDefinition asm, string path)
         {
-            // Log.LogMessage (asm.FullName);
+            //Log.LogMessage (asm.FullName);
 
             var changed = false;
             foreach (var m in asm.Modules)
-            {
-                if (m.AssemblyReferences.Any(x => x == niasm.Name))
-                {
-                    // Log.LogMessage ("Skipping module " + m);
-                    break;
-                }
+            {                
                 InstrumentModule(m);
                 changed = true;
             }
@@ -107,7 +118,7 @@ namespace Refractored.DesignTimeData.BuildTasks
                     WriteSymbols = File.Exists(Path.ChangeExtension(path, ".pdb")),
                 };
                 asm.Write(wps);
-                Log.LogMessage($"Fixed \"{path}\"");
+                //Log.LogMessage($"Fixed \"{path}\"");
                 asm.Dispose();
             }
         }
@@ -155,6 +166,7 @@ namespace Refractored.DesignTimeData.BuildTasks
 
             public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
             {
+                //task.Log.LogMessage("Resolve");
                 if (!AssemblyCache.TryGetValue(name.Name, out var asm))
                 {
                     //task.Log.LogMessage ("Looking for " + name.Name);
@@ -177,6 +189,7 @@ namespace Refractored.DesignTimeData.BuildTasks
                     }
                     return base.Resolve(name, parameters);
                 }
+                //task.Log.LogMessage("Already resolved returning asm");
                 return asm;
             }
         }
