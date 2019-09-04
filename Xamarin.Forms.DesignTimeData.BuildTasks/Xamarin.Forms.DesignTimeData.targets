@@ -1,17 +1,17 @@
 ﻿
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<UsingTask TaskName="Xamarin.Forms.DesignTimeData.BuildTasks.DesignTimeDataTask" AssemblyFile="$(MSBuildThisFileDirectory)Xamarin.Forms.DesignTimeData.BuildTasks.BuildTasks.dll" />
+	<UsingTask TaskName="Xamarin.Forms.DesignTimeData.BuildTasks.DesignTimeDataTask" AssemblyFile="$(MSBuildThisFileDirectory)Xamarin.Forms.DesignTimeData.BuildTasks.dll" />
 
 	<!-- DesignTimeDataTask -->
 	<PropertyGroup>
 		<CompileDependsOn>
       $(CompileDependsOn);
-      DesignTimeDataTask;
+      PatchDesignTimeData;
     </CompileDependsOn>
   </PropertyGroup>
 
-  <Target Name="DesignTimeDataTask" AfterTargets="CopyFilesToOutputDirectory" DependsOnTargets="CopyFilesToOutputDirectory" Condition="'$(_DesignTimeDataTaskAlreadyExecuted)'!='true'">
+  <Target Name="PatchDesignTimeData" AfterTargets="CopyFilesToOutputDirectory" DependsOnTargets="CopyFilesToOutputDirectory" Condition="'$(_DesignTimeDataTaskAlreadyExecuted)'!='true'">
 		<PropertyGroup>
       <_DesignTimeDataTaskAlreadyExecuted>true</_DesignTimeDataTaskAlreadyExecuted>
 		</PropertyGroup>
