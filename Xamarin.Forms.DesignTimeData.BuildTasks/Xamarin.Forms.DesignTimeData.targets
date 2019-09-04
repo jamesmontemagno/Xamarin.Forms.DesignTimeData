@@ -1,7 +1,7 @@
 ﻿
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<UsingTask TaskName="Xamarin.Forms.DesignTimeData.BuildTasks.DesignTimeDataTask" AssemblyFile="$(MSBuildThisFileDirectory)Xamarin.Forms.DesignTimeData.BuildTasks.dll" />
+	<UsingTask TaskName="Refractored.DesignTimeData.BuildTasks.DesignTimeDataTask" AssemblyFile="$(MSBuildThisFileDirectory)Xamarin.Forms.DesignTimeData.BuildTasks.dll" />
 
 	<!-- DesignTimeDataTask -->
 	<PropertyGroup>

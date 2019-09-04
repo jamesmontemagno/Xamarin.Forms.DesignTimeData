@@ -7,7 +7,7 @@ using System.IO;
 using System;
 using System.Linq;
 
-namespace Xamarin.Forms.DesignTimeData.BuildTasks
+namespace Refractored.DesignTimeData.BuildTasks
 {
     public class DesignTimeDataTask : Task
     {
